@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="pragma" content="no-cache; charset=utf-8" />
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OctoControl</title>
+<style type="text/css">
+
+body {background-color:#FFFFDD}
+
+//td {vertical-align:top;padding:0px;margin:0px}
+p {text-align:justify;margin-bottom:0px}
+td.gchord {font-size:75%;font-weight:bold;padding:0px;margin:0px;padding-top:0px;padding-right:3px;text-align:left;font-family:verdana,arial;color:#888888;position:relative;top:3px}
+td.gtxt {text-align:left}
+.dettitle {border-bottom:1px lightgray dashed}
+.dettitle2 {border-bottom:1px lightgray dashed}
+
+h2 {margin-top:20px; background-color:xgray}
+h3 {background-color:xyellow;margin-top:30px;text-decoration:underline}
+h4 {padding-left:0px;margin-left:0px;text-decoration:underline;color:#333333}
+ul {margin-top:0px;padding-top:0px}
+.ref {color:gray}
+
+.gr {color:gray}
+.grsm {color:gray;font-size:80%}
+.err {color:red;font-weight:bold}
+
+a {text-color:blue;text-decoration:underline}
+a:HOVER {border-bottom:1px blue;color:red}
+a.index {text-decoration:none}
+a.index:HOVER {text-decoration:underline;color:red}
+
+.preFile {background-color:lightgray;padding:0.5em}
+
+td.imgthumb {vertical-align:top;padding:5px;font-size:80%}
+img.ico {width:12px;height:12px;overflow:visible;position:relative;margin-top:-5px}
+.imginc {max-width:100%;max-height:80vh}
+.imginccap {text-align:left;padding-bottom:0.5em}
+
+div.code {margin:0px;padding:0px;padding-left:30px;}
+.code {font-family:courier,fixed;color:green;}
+
+.cmd {font-family:courier,fixed;color:red;background-color:#FFEEDD;font-weight:bold;white-space:pre-wrap;padding-left:0.5em;;padding-right:0.5em;padding-top:0.5em;padding-bottom:0.5em}
+.cmd::first-line {color:darkred;}
+.cmd::before {content:'> ';}
+
+.cmdresp {font-family:courier,fixed;color:blue;background-color:#EEEEFF;white-space:pre-wrap;padding-left:0.5em;;padding-right:0.5em;}
+.cmdresp::first-line {color:darkblue;}
+.cmdresp::before {content:'  ';}
+
+.comm {font-family:courier,fixed;color:red;background-color:#FFEEDD;font-weight:bold;white-space:pre-wrap;padding-left:0.5em;;padding-right:0.5em;}
+.comm::first-line {color:darkred;}
+.comm::before {content:'> ';}
+
+.commresp {font-family:courier,fixed;color:blue;background-color:#EEEEFF;white-space:pre-wrap;padding-left:0.5em;;padding-right:0.5em;}
+.commresp::first-line {color:darkblue;}
+.commresp::before {content:'< ';}
+
+.bang {font-weight:bold;color:red}
+
+
+// unsupported by everything except apple, so far
+//@media screen and (inverted-colors: inverted) {
+//.cmd {background-color:#0000CC;color:lightblue;}
+//.cmd::first-line: {color:blue}
+//.cmdresp {background-color:#CC0000;color:lightred}
+//.cmdresp::first-line: {color:red}
+//}
+
+
+@media print{
+body {font-size:80%}
+.noprint {display:none;visibility:hidden}
+.xnopbr {page-break-inside:avoid}
+td.gchord: {color:black}
+.nopbr {}
+.preFile {background-color:white;border:1px dotted black}
+}
+</style>
+<meta property="og:title" content="OctoControl" />
+<meta property="og:type" content="website" />
+<meta property="og:x-url" content="http://:" />
+<meta property="og:description" content="8control, a utility suite for controlling of OctoPrint server" />
+</head>
+<body>
+<h1>OctoControl</h1><hr class="noprint" /><div class="noprint"><a class="index indexlev2" href="#Problem" title="">Problem</a><br /><a class="index indexlev2" href="#Solutionapproach" title="Solution approach">Solution approach</a><br /><a class="index indexlev2" href="#Commandsuite" title="Command suite">Command suite</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><a class="index indexlev3" href="#Commands" title="Command suite.Commands">Commands</a></small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><a class="index indexlev4" href="#Statushandling" title="Command suite.Commands.Status handling">Status handling</a></small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><a class="index indexlev4" href="#Connectionhandling" title="Command suite.Commands.Connection handling">Connection handling</a></small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><a class="index indexlev4" href="#Gcode" title="Command suite.Commands.G-code">G-code</a></small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><a class="index indexlev4" href="#Jobcontrol" title="Command suite.Commands.Job control">Job control</a></small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><a class="index indexlev4" href="#Positioning" title="Command suite.Commands.Positioning">Positioning</a></small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><a class="index indexlev4" href="#Extrusion" title="Command suite.Commands.Extrusion">Extrusion</a></small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><a class="index indexlev4" href="#Temperature" title="Command suite.Commands.Temperature">Temperature</a></small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><a class="index indexlev4" href="#Headfan" title="Command suite.Commands.Head fan">Head fan</a></small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><a class="index indexlev4" href="#Speedcontrol" title="Command suite.Commands.Speed control">Speed control</a></small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><a class="index indexlev4" href="#Systemcommands" title="Command suite.Commands.System commands">System commands</a></small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><a class="index indexlev4" href="#Filecommands" title="Command suite.Commands.File commands">File commands</a></small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><a class="index indexlev4" href="#Displaybeepandalarmcommands" title="Command suite.Commands.Display, beep, and alarm commands">Display, beep, and alarm commands</a></small><br /><a class="index indexlev2" href="#Examples" title="Examples">Examples</a><br /><a class="index indexlev2" href="#Weaknesses" title="Weaknesses">Weaknesses</a><br /><a class="index indexlev2" href="#Download" title="Download">Download</a><br /><a class="index indexlev2" href="#TODO" title="TODO">TODO</a><br /></div><hr /><a name="Problem"></a><h2>Problem
+</h2>
+<p>
+<a class="a" href="http://octoprint.org/" title="remote link: http://octoprint.org/" target="_blank">OctoPrint</a> is a&nbsp;neat software used as a&nbsp;web-operated printserver
+for <a class="w" href="https://en.wikipedia.org/wiki/3D_printers" title="Wikipedia link: 3D printers" target="_blank">3D printers</a>.
+</p>
+<p>
+Sometimes, however, a&nbsp;commandline control is desired.
+</p>
+<p>
+There is a&nbsp;utility called <a class="a" href="https://github.com/vishnubob/octocmd" title="remote link: https://github.com/vishnubob/octocmd" target="_blank">octocmd</a>, that provides
+a way to upload and select files, run printing and slicer, and watch status. It however misses
+a lot of functionality.
+</p>
+<p>
+An easy way with a&nbsp;richer set of commandline utilities was desired. Many functions (move, extrude,
+retract, pause...) may need to be run from e.g. a&nbsp;control panel sending <a class="w" href="https://en.wikipedia.org/wiki/USB_HID" title="Wikipedia link: USB HID" target="_blank">USB HID</a> events. A simple
+script then can handle the&nbsp;events and send the&nbsp;associated OctoPrint API calls.
+</p>
+<hr /><a name="Solutionapproach"></a><h2>Solution approach
+</h2>
+<p>
+The OctoPrint server comes with a&nbsp;powerful <a class="w" href="https://en.wikipedia.org/wiki/Representational_state_transfer" title="Wikipedia link: Representational state transfer" target="_blank">REST</a> <a class="w" href="https://en.wikipedia.org/wiki/Application_programming_interface" title="Wikipedia link: Application programming interface" target="_blank">API</a> accessible
+over the&nbsp;<a class="w" href="https://en.wikipedia.org/wiki/HTTP" title="Wikipedia link: HTTP" target="_blank">HTTP</a> protocol and extensively using <a class="w" href="https://en.wikipedia.org/wiki/JSON" title="Wikipedia link: JSON" target="_blank">JSON</a> format for the&nbsp;data.
+The production version API documentation is <a class="a" href="http://docs.octoprint.org/en/master/api/index.html" title="remote link: http://docs.octoprint.org/en/master/api/index.html" target="_blank">here</a>.
+</p>
+<p>
+The HTTP REST API can be accessed via <a class="w" href="https://en.wikipedia.org/wiki/cURL" title="Wikipedia link: cURL" target="_blank">cURL</a> commandline utility.
+</p>
+<p>
+The OctoControl, aka 8control, is a&nbsp;simple <a class="w" href="https://en.wikipedia.org/wiki/Bash_(Unix_shell)" title="Wikipedia link: Bash (Unix shell)" target="_blank">bash</a> <a class="w" href="https://en.wikipedia.org/wiki/shell_script" title="Wikipedia link: shell script" target="_blank">shell script</a> housing multiple utilities and calling the&nbsp;API via <span class="code">cURL</span>.
+The host and API key are fetched from the&nbsp;octocmd configuration file, housed in <span class="code">~/.octocmd.conf</span> - the&nbsp;file is in JSON
+format and is parsed via grep and cut to extract the&nbsp;variables.
+</p>
+<p>
+Bash was chosen instead of e.g. <a class="w" href="https://en.wikipedia.org/wiki/Python_(programming_language)" title="Wikipedia link: Python (programming language)" target="_blank">Python</a>. Octocmd is written in Python and
+on less powerful computers, e.g. the&nbsp;<a class="w" href="https://en.wikipedia.org/wiki/Raspberry_Pi" title="Wikipedia link: Raspberry Pi" target="_blank">Raspberry Pi</a>, Python tends have a&nbsp;fairly slow start. Bash scripts,
+at least the&nbsp;simple ones, are much snappier.
+</p>
+<hr /><a name="Commandsuite"></a><h2>Command suite
+</h2>
+<p>
+The core command is a&nbsp;bash shell script, <span class="code">_8command.sh</span>. All the&nbsp;commands it hosts are linked by a
+<a class="w" href="https://en.wikipedia.org/wiki/symbolic_link" title="Wikipedia link: symbolic link" target="_blank">symbolic link</a>.
+</p>
+<p>
+Options:
+<pre class="preFile">8control octoprint command suite, complementary to octocmd
+
+Global commands:
+  -h      this help
+  -v      verbose (show requests)
+  -vv     more verbose (show requests and headers)
+
+Config file location: /etc/octocmd.conf (or /root/.octocmd.conf) (current=/etc/octocmd.conf)
+  8checkcfg              check 8control's configuration
+  8apiver                show API and server version
+  8statusraw             show controller connection status, raw JSON
+  8status                show controller connection status, status only
+  8connect               connect controller to server
+  8disconnect            disconnect controller from server
+  8reconnect             disconnect, reset, connect
+  8g &quot;&lt;code&gt;&quot;            send gcode to controller
+  8gcode &quot;&lt;code&gt;&quot;        send gcode to controller
+  8g0 &quot;&lt;coords&gt;&quot;         send G0 command to controller
+  8g1 &quot;&lt;coords&gt;&quot;         send G1 command to controller
+  8speed &lt;factor&gt;        override speed, in percents
+  8feed &lt;factor&gt;         override filament feed, in percents
+  8start                 start loaded print job
+  8print                 start loaded print job
+  8restart               restart print job
+  8pause_raw             pause/unpause running job, raw call
+  8pause                 pause running job
+  8resume                resume running job
+  8cancel                cancel running job
+  8xcancel               cancel running job, keep temperature setting of the tools
+  8home                  home printer head
+  8jog &lt;x&gt; &lt;y&gt; &lt;z&gt;       jog printer head by x,y,z mm
+  8jog &lt;z&gt;               jog printer head by z mm
+  8settemp &lt;temp&gt;        set tool0 to &lt;temp&gt; 'C, M104 S&lt;temp&gt;
+  8setbed &lt;temp&gt;         set bed to &lt;temp&gt; 'C, M140 S&lt;temp&gt;
+  8settempr &lt;temp&gt;       adjust tool0 by &lt;temp&gt; 'C, M104 R S&lt;temp&gt;; firmware MUST support Shad's R extension
+  8setbedr &lt;temp&gt;        set bed to &lt;temp&gt; 'C, M140 R S&lt;temp&gt;; firmware MUST support Shad's R extension
+  8ex &lt;mm&gt;               extrude &lt;mm&gt; millimeters of filament (negative to retract)
+  8extrude &lt;mm&gt;          extrude &lt;mm&gt; millimeters of filament (negative to retract)
+  8fex &lt;mm&gt; [mm/min]     fast extrude &lt;mm&gt; millimeters of filament (negative to retract) with optional speed
+  8eject [-t temp]       eject filament, optionally heat head before
+  8gmulti &lt;cmd&gt; [&lt;cmd&gt;]...  send several commands in one transaction
+  8upload &lt;file&gt;         upload gcode file
+  8runfile &lt;file&gt;        upload gcode file as tmp.g and execute it
+  8fan &lt;on|off|0..255&gt;   control the head fan
+  8fan2 &lt;on|off&gt;         control the bed fan (M42 P57)
+  8gettemp_raw           show tool temperature
+  8gettemp               show tool temperature
+  8getbed                show bed temperature, raw JSON
+  8getbed                show bed temperature
+  8servo &lt;num&gt; &lt;angle&gt;   set servo angle
+  8run &lt;cmd&gt;             run system-menu custom command (see .octoprint/config.yaml or 8ListCmds for commands)
+  8reset                 run system-menu command &quot;reset&quot;
+  8on                    power up the printer
+  8off                   power down the printer
+  8ListCmds              list system commands (raw JSON)
+  8ls_raw                list available files (raw JSON)
+  8ls                    list available files
+  8ll &lt;filename&gt;         show info for &lt;filename&gt; (raw JSON)
+  8fselect &lt;filename&gt;    select &lt;filename&gt;
+  8getjob                information about current job, raw JSON
+  8msg &quot;&lt;msg&gt;&quot;           show message on display via M117 gcode
+  8beep [n [f]]   beep via M300 gcode [optionally for n milliseconds [at f Hz]]
+  8alarm [d] &lt;t|b&gt; &lt;T&gt;   wait until &lt;t&gt;ip or &lt;b&gt;ed reaches temperature T (&quot;d&quot; for decreasing), then beep and exit
+  8alarmq [d] &lt;t|b&gt; &lt;T&gt;  wait until &lt;t&gt;ip or &lt;b&gt;ed reaches temperature T (&quot;d&quot; for decreasing), then quietly exit
+</pre></p>
+<a name="Commands"></a><h3>Commands
+</h3>
+<p>
+Some commands retrieve data. They are usually in JSON format. The most commonly needed data are extracted via <span class="code">grep</span>.
+Such commands have the&nbsp;corresponding _raw version that shows the&nbsp;JSON itself.
+</p>
+<p>
+All the&nbsp;commands start with 8. The host file starts with _8, to avoid collisions.
+</p>
+<p>
+Most commands do not have parameters. Most commands do not have any response.
+</p>
+<p>
+Some commands use <a class="w" href="https://en.wikipedia.org/wiki/G-code" title="Wikipedia link: G-code" target="_blank">G-code</a>. There is also a&nbsp;command to directly send G-code commands to the&nbsp;printer.
+</p>
+<a name="Statushandling"></a><h4>Status handling
+</h4>
+<ul><li> <span class="code">8status</span> - shows the&nbsp;current printer status (Closed (port disconnected), Connecting, Operational, Printing, Paused)
+</li></ul><a name="Connectionhandling"></a><h4>Connection handling
+</h4>
+<ul><li> <span class="code">8connect</span> - connects server to the&nbsp;default controller port
+</li><li> <span class="code">8disconnect</span> - disconnects server (e.g. before attempting to reflash the&nbsp;controller, or running a&nbsp;script directly operating the&nbsp;printer)
+</li></ul><a name="Gcode"></a><h4>G-code
+</h4>
+<ul><li> <span class="code">8g</span> - send raw G-code to the&nbsp;printer, like from OctoPrint terminal
+</li></ul><p>
+The G-code is converted to uppercase before being sent to the&nbsp;printer.
+</p>
+<a name="Jobcontrol"></a><h4>Job control
+</h4>
+<ul><li> <span class="code">8start</span> - start the&nbsp;job
+</li><li> <span class="code">8restart</span> - restart print job
+</li><li> <span class="code">8pause</span> - pause print job
+</li><li> <span class="code">8resume</span> - resume paused job
+</li><li> <span class="code">8cancel</span> - cancel print job
+</li></ul><p>
+The pause API call toggles the&nbsp;printing and paused status; calling it twice would pause and resume the&nbsp;print.
+To achieve stateless operation, the&nbsp;corresponding commands are checking the&nbsp;printer status before acting;
+8pause will fire only when Printing, 8resume only when Paused. This will be important for pausing prints when
+some supervisory electronics (filament jam or runout sensor, computer vision...) detects an operator-requiring
+anomaly.
+</p>
+<p>
+Beware, the&nbsp;API documentation shows /api/job correctly but the&nbsp;examples show /api/control/job - this was confusing a&nbsp;bit.
+</p>
+<a name="Positioning"></a><h4>Positioning
+</h4>
+<ul><li> <span class="code">8home</span> - home all the&nbsp;axes
+</li><li> <span class="code">jog &lt;x&gt; &lt;y&gt; &lt;z&gt;</span> - move axes by relative position in mm
+</li><li> <span class="code">8g1 [X&lt;x&gt;] [Y&lt;y&gt;] [Z&lt;z&gt;] [F&lt;speed&gt;] </span> - use G-code to directly move to position
+</li></ul><p>
+The jog directions are sign-flipped, to match the&nbsp;directions of the&nbsp;G-code based movements, so e.g. positive Z would
+move up and negative would move down.
+</p>
+<a name="Extrusion"></a><h4>Extrusion
+</h4>
+<ul><li> <span class="code">8extrude &lt;mm&gt;</span> - extrude length of the&nbsp;filament; negative to retract
+</li><li> <span class="code">8ex &lt;mm&gt;</span> - shortcut for 8ex
+</li><li> <span class="code">8fex &lt;mm&gt; [speed] </span> - fast extrude length of the&nbsp;filament at 2000&nbsp;mm/min or at different speed in mm/sec (e.g. <span class="code">8fex -600</span> retracts 60&nbsp;cm of the&nbsp;filament)
+</li></ul><p>
+The fast extrude is handy for replacing the&nbsp;filament.
+</p>
+<a name="Temperature"></a><h4>Temperature
+</h4>
+<ul><li> <span class="code">8settemp &lt;degC&gt;</span> - set extruder temperature
+</li><li> <span class="code">8setbed &lt;degC&gt;</span> - set bed temperature
+</li><li> <span class="code">8gettemp</span> - get extruder temperature
+</li><li> <span class="code">8getbed</span> - get bed temperature
+</li></ul><a name="Headfan"></a><h4>Head fan
+</h4>
+<ul><li> <span class="code">8fan &lt;on|off|0..255&gt;</span> - set fan to full power, switch it off, or set its PWM control to a&nbsp;value (low values need higher values initially to spin the&nbsp;fan on, then can be slowed down)
+</li></ul><a name="Speedcontrol"></a><h4>Speed control
+</h4>
+<ul><li> <span class="code">8speed &lt;%&gt;</span> - set speed to <span class="code">%</span> of nominal (e.g. <span class="code">8speed 120</span> sets 120% speed)
+</li><li> <span class="code">8feed &lt;%&gt;</span> - set filament feed to <span class="code">%</span> of nominal (e.g. <span class="code">8feed 105</span> sets 5% overextrusion)
+</li></ul><a name="Systemcommands"></a><h4>System commands
+</h4>
+<ul><li> <span class="code">8run &lt;command&gt;</span> - run a&nbsp;command from the&nbsp;System menu from OctoPrint
+</li></ul><p>
+The commands are set up in the&nbsp;<span class="code">~/.octoprint/config.yaml</span> file. Typical functions are switching the&nbsp;video
+streaming on and off.
+</p>
+<p>
+This was not described in the&nbsp;documentation, or it was not possible to find there, so it had to be
+reverse-engineered using <span class="code">tcpdump</span> or <span class="code">tshark</span>.
+</p>
+<a name="Filecommands"></a><h4>File commands
+</h4>
+<ul><li> <span class="code">8ls</span> - list uploaded files on the&nbsp;printer
+</li><li> <span class="code">8ll &lt;filename&gt;</span> - list the&nbsp;file parameters, as raw JSON
+</li></ul><a name="Displaybeepandalarmcommands"></a><h4>Display, beep, and alarm commands
+</h4>
+<ul><li> <span class="code">8msg &quot;&lt;message&gt;&quot;</span> - show message on the&nbsp;display, using M117&nbsp;G-code
+</li><li> <span class="code">8beep</span> - beep the&nbsp;printer's beeper, using M130&nbsp;G-code
+</li><li> <span class="code">8alarm [d] &lt;t|b&gt; &lt;temperature&gt;</span> - wait until temperature of <span class="code">t</span>ip or <span class="code">b</span>ed increases (or <span class="code">d</span>ecreases) to <span class="code">temperature</span>, then 8beep the&nbsp;printer and exit
+</li><li> <span class="code">8alarmq [d] &lt;t|b&gt; &lt;temperature&gt;</span> - the&nbsp;same, without the&nbsp;beep
+</li></ul><hr /><a name="Examples"></a><h2>Examples
+</h2>
+<ul><li> Show "This is a&nbsp;test" message on the&nbsp;display: <span class="code">8msg &quot;This is a test&quot;</span>
+</li><li> Position printer to center, 10&nbsp;mm above the&nbsp;bed: <span class="code">8g1 x0 y0 z10</span>
+</li><li> Set extruder to 180&nbsp;&deg;C: <span class="code">8settemp 180</span>
+</li><li> Set bed to 60&nbsp;&deg;C: <span class="code">8setbed 60</span>
+</li><li> Retract filament by 20&nbsp;mm: <span class="code">8extrude -20</span>
+</li><li> Lift head by 20&nbsp;mm: <span class="code">8jog 0 0 -20</span>
+</li><li> Wait until bed temperature reaches at least 50&nbsp;&deg;C, then beep: <span class="code">8alarm b 50</span>
+</li><li> Silently wait until tool1&nbsp;temperature cools down to at most 50&nbsp;&deg;C: <span class="code">8alarmq d t 50</span>
+</li></ul><hr /><a name="Weaknesses"></a><h2>Weaknesses
+</h2>
+<ul><li> There is little to no checking of parameter validity.
+</li><li> There is no parsing of JSON; the&nbsp;processing relies on the&nbsp;server providing a&nbsp;well-readable format with one variable per line.
+</li><li> Most commands have no indication of success or failure.
+</li><li> There is no way to get responses of the&nbsp;G-code commands. OctoPrinter seems to be extracting the&nbsp;data from a&nbsp;<a class="w" href="https://en.wikipedia.org/wiki/websocket" title="Wikipedia link: websocket" target="_blank">websocket</a> monitor of the&nbsp;port for the&nbsp;interactive ones.
+</li></ul><hr /><a name="Download"></a><h2>Download
+</h2>
+<p>
+The archive with the&nbsp;host file and the&nbsp;symlink can be unzipped right to the&nbsp;target
+directory (usually <span class="code">/usr/bin/</span> or <span class="code">/usr/local/bin/</span>. Simply cd to the&nbsp;directory
+and then run <span class="code">tar -xzvf &amp;lt;archive_name.tar.gz&amp;gt;</span>.
+</p>
+<ul><li> <a class="F" href="OctoControl.tar.gz" title="local file">OctoControl.tar.gz</a> - archive with host script and all the&nbsp;symlinks
+</li><li> <a class="F" href="_8control.sh" title="local file">_8control.sh</a> - the&nbsp;host script itself
+</li></ul><p>
+Do not forget to run the&nbsp;<span class="code">install.sh</span> script to make the&nbsp;symlinks, eg. to /usr/bin:
+<div class="cmd">./install.sh /usr/bin/</div></p>
+<hr /><a name="TODO"></a><h2>TODO
+</h2>
+<ul><li> Find a&nbsp;way to get feedback for the&nbsp;G-code commands. Patching OctoPrint may be necessary.
+</li></ul><!-- feedback -->
+<!-- /feedback -->
+</body>
+</html>
